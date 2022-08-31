@@ -1,0 +1,72 @@
+:root {
+    --wallColor:  rgb(62, 132, 30);
+    --doorColor: rgb(238, 66, 66);
+}
+
+.topRightWall{
+    position: absolute;
+    left: 66%;
+    background-color: var(--wallColor);
+    height: 5%;
+    width: 33%;
+}
+.topLeftWall{
+    position: absolute;
+    left: 0%;
+    background-color: var(--wallColor);
+    height: 5%;
+    width: 33%;
+}
+
+.bottomRightWall {
+    position: absolute;
+    left: 66%;
+    top: 95%;
+    background-color: var(--wallColor);
+    height: 5%;
+    width: 33%;
+}
+
+.bottomLeftWall {
+    position: absolute;
+    left: 0%;
+    top: 95%;
+    background-color: var(--wallColor);
+    height: 5%;
+    width: 33%;
+}
+
+.rightWall {
+    position: absolute;
+    left: 95%;
+    background-color: var(--wallColor);
+    height: 100%;
+    width: 5%;
+}
+
+.leftWall {
+    position: absolute;
+    left: 0;
+    background-color: var(--wallColor);
+    height: 100%;
+    width: 5%;
+}
+
+.topDoor{
+    display:none;
+    position: absolute;
+    left: 33%;
+    background-color: var(--doorColor);
+    height: 5%;
+    width: 33%;
+}
+
+.bottomDoor{
+    display:none;
+    position: absolute;
+    left: 33%;
+    top: 95%;
+    background-color: var(--doorColor);
+    height: 5%;
+    width: 33%;
+}
