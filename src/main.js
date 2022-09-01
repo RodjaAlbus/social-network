@@ -1,11 +1,13 @@
 import { alreadyPrankster } from './components/alreadyPrankster.js';
 import { playground } from './components/lobby.js';
+import { message } from './components/PSMessage.js';
 import { Welcome } from './components/welcome.js';
 
 const root = document.getElementById('root')
 const routes = {
     '/': Welcome,
     '/returningPrankster': alreadyPrankster,
+    '/message': message,
     '/playground': playground
 }
 

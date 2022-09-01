@@ -83,7 +83,7 @@ export const Welcome = () => {
     const btnEnter = document.createElement('button')
     btnEnter.textContent = 'Get In Looser :p'
     btnEnter.className = 'buttons'
-    btnEnter.addEventListener('click', () => onNavigate('/playground')) //Aun no primero al mensaje
+    btnEnter.addEventListener('click', () => onNavigate('/message')) 
 
     const btnReturningPrankster = document.createElement('button')
     btnReturningPrankster.textContent = 'Have a prankster already?'
