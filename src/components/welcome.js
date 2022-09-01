@@ -5,6 +5,8 @@ export const Welcome = () => {
 
     const title = document.createElement('h1')
     title.textContent = 'The prank Society'
+    const paperEffect = document.createElement('div')
+    paperEffect.id = 'paperH1'
 
     const section = document.createElement('section')
     section.className = 'createPrankster'
@@ -87,10 +89,12 @@ export const Welcome = () => {
     btnReturningPrankster.textContent = 'Have a prankster already?'
     btnReturningPrankster.className = 'footer'
     btnReturningPrankster.addEventListener('click', () => onNavigate('/returningPrankster'))
+    const footerPaperEffact = document.createElement('div')
+    footerPaperEffact.id = 'footerPaper'
 
     colorButtons.append(btnBlue, btnPink, btnOrange, btnYellow, btnGreen, btnPurple);
     section.append(pranksterName, canvas, colorButtons, email, password, btnEnter);
-    div.append(title, section, btnReturningPrankster)
+    div.append(paperEffect, title, section, footerPaperEffact, btnReturningPrankster)
 
     return div
 }
