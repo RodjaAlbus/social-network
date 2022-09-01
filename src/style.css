@@ -1,118 +1,126 @@
-.Welcome {
-    display: grid;
-    grid-row: 100%;
-    background-color: rgba(235, 47, 87, 1);
-    text-align: center;
-    color: rgb(255, 255, 255);
-}
-:root {
-    --wallColor:  rgb(62, 132, 30);
-    --doorColor: rgb(238, 66, 66);
-}
-
-.player {
-    position: fixed;
-    top: 0px;
-    left: 0px;
+html,
+body {
     background-color: aqua;
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    z-index: 6;
+    background-image: url(../img/BG3.png);
+    background-position-y: top;
+    background-repeat: repeat;
+    background-size:cover;
 }
 
-#gameArea {
-    display: none;
-    position: absolute;
+h1 {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgb(255, 255, 255);
+    background-color: rgba(235, 47, 87, 1);
+    z-index: 10;
+    text-align: center;
+    white-space: nowrap;
+    padding: 30px;
+    padding-left: 27%;
+    padding-right: 27%;
+    margin: 0;
+    border-bottom: 10px solid rgb(254, 255, 255);
+}
+
+canvas{
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    z-index: 10;
+    border-radius: 20%;
+}
+
+.createPrankster{
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 69%;
+    height: 65%;
+    padding: 30px;
+}
+
+.inputs{
+    background-color: rgba(235, 47, 88, 0.564);
+    border: 5px solid white;
+    text-align: center;
+}
+.inputs::placeholder{
+    color: rgb(211, 211, 211);
+}
+.buttons {
+    color: white;
+    background-color: rgba(235, 47, 88, 1);
+    padding: 10px;
+}
+
+#name{
+    margin-bottom: 53%;
+}
+
+.colorButtons, #email {
+    margin-bottom: 5%;
+}
+
+#password{
+    margin-bottom: 15%;
+}
+
+#blue, #pink, #orange, #yellow, #green, #purple {
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 20%;
+}
+#blue {
+    background-color: #80d1f9;
+}
+#pink {
+    background-color: #f090d1;
+}
+#orange {
+    background-color: #ffa492;
+}
+#yellow{
+    background-color: #ffec9c;
+}
+#green{
+    background-color: #b7ff81;
+}
+#purple{
+    background-color: #b18aff;
+}
+
+.returningPrankster {
+    position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    background-color: antiquewhite;
-    height: 700px;
-    width: 700px;
+    transform: translate(-50%, -50%);
+    display: flexbox;
+    text-align: center;
+    width: 69%;
+    height: 30%;
+    background-color: rgba(235, 47, 87, 1);
+    border: 10px solid white;
+    padding: 30px;
 }
 
-#roomHorizontal, #roomVertical {
-    display: none;
-}
-
-.room  {
-    position: absolute;
-    top: 50%;
+.footer {
+    position: fixed;
+    top: 100%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    background-color: rgb(208, 255, 186);
-    height: 100px;
-    width: 100px;
-}
-
-.topWall{
-    position: absolute;
-    left: 0;
-    background-color: var(--wallColor);
-    height: 5%;
-    width: 100%;
-}
-
-.bottomWall {
-    position: absolute;
-    left: 0;
-    top: 95%;
-    background-color: var(--wallColor);
-    height: 5%;
-    width: 100%;
-}
-
-.rightUpWall {
-    position: absolute;
-    left: 95%;
-    background-color: var(--wallColor);
-    height: 33%;
-    width: 5%;
-}
-
-.rightDownWall {
-    position: absolute;
-    left: 95%;
-    top: 66%;
-    background-color: var(--wallColor);
-    height: 33%;
-    width: 5%;
-}
-
-.leftUpWall {
-    position: absolute;
-    left: 0;
-    background-color: var(--wallColor);
-    height: 33%;
-    width: 5%;
-}
-
-.leftDownWall {
-    position: absolute;
-    left: 0%;
-    top: 66%;
-    background-color: var(--wallColor);
-    height: 33%;
-    width: 5%;
-}
-
-.rightDoor{
-    display: none;
-    position: absolute;
-    left: 95%;
-    top: 33%;
-    background-color: var(--doorColor);
-    height: 33%;
-    width: 5%;
-}
-
-.leftDoor{
-    display: none;
-    position: absolute;
-    left: 0;
-    top: 33%;
-    background-color: var(--doorColor);
-    height: 33%;
-    width: 5%;
+    transform: translate(-50%, -100%);
+    color: rgb(255, 255, 255);
+    background-color: rgba(235, 47, 87, 1);
+    z-index: 10;
+    text-align: center;
+    white-space: nowrap;
+    padding: 30px;
+    padding-left: 100%;
+    padding-right: 100%;
+    border-top: 10px solid rgb(254, 255, 255);
 }
