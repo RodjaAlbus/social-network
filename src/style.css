@@ -86,6 +86,7 @@ canvas {
 
 #password {
     margin-bottom: 15%;
+    -webkit-text-security: square;
 }
 
 #blue,

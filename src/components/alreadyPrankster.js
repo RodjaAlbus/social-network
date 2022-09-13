@@ -1,4 +1,6 @@
 import { onNavigate } from "../main.js"
+import { auth } from "../lib/config.js"
+import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js'
 
 export const alreadyPrankster = () => {
     const div = document.createElement('div')
@@ -12,19 +14,32 @@ export const alreadyPrankster = () => {
 
     const sectionTitle = document.createElement('h2')
     sectionTitle.textContent = "long time no see"
+    /*const pranksterName = document.createElement('input')
+    pranksterName.className = 'inputs2'
+    pranksterName.setAttribute('type', 'text')
+    pranksterName.placeholder = "ID yourself prankster"*/
     const pranksterName = document.createElement('input')
     pranksterName.className = 'inputs2'
     pranksterName.setAttribute('type', 'text')
-    pranksterName.placeholder = "ID yourself prankster"
+    pranksterName.placeholder = "Email"
     const password = document.createElement('input')
     password.setAttribute('type', 'text')
+    password.id = 'password'
     password.className = 'inputs2'
     password.placeholder = "whats your passcode?"
 
     const btnEnter = document.createElement('button')
     btnEnter.textContent = 'Get In Looser :p'
     btnEnter.className = "buttons"
-    btnEnter.addEventListener('click', () => onNavigate('/playground'))
+    btnEnter.addEventListener('click', () => {
+        signInWithEmailAndPassword(auth, pranksterName.value, password.value)
+            .then(() => {
+                onNavigate('/playground')
+            })
+            .catch((error) => {
+                alert('Prankster not registered')
+            });
+    })
 
     const btnback = document.createElement('button')
     btnback.textContent = 'Create Prankster'

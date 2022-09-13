@@ -11,17 +11,13 @@ const routes = {
     '/playground': playground
 }
 
-//root.appendChild(Welcome());
-
 export const onNavigate = (pathname) => {
     window.history.pushState(
         {},
         pathname,
         window.location.origin + pathname
     )
-    //root.innerHTML = routes[pathname]();
     root.removeChild(root.firstChild)
-    //root.removeChild(root.children[1])
     root.appendChild(routes[pathname]())
 }
 
