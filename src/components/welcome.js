@@ -1,6 +1,12 @@
-import { auth } from "../lib/config.js"
+import { auth } from "../lib/index.js"
 import { onNavigate } from "../main.js"
-import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js'
+import { updateProfile } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
+import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
+import {
+    getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField
+} from "https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore.js";
+
+const db = getFirestore();
 
 export const Welcome = () => {
     const div = document.createElement('div')
@@ -18,6 +24,7 @@ export const Welcome = () => {
     pranksterName.placeholder = "Name your prankster"
     pranksterName.id = 'name'
     pranksterName.className = 'inputs'
+    pranksterName.autocomplete = 'off'
 
     const canvas = document.createElement('canvas')
     canvas.width = 102
@@ -34,7 +41,7 @@ export const Welcome = () => {
 
     const colorButtons = document.createElement('div')
     colorButtons.className = 'colorButtons'
-    const theColorOfTheButton = ''
+    let theColorOfTheButton = 'blue'
 
     const btnBlue = document.createElement('button')
     btnBlue.id = 'blue'
@@ -84,26 +91,46 @@ export const Welcome = () => {
     email.placeholder = "Email"
     email.id = 'email'
     email.className = 'inputs'
+    email.autocomplete = 'off'
     const password = document.createElement('input')
     password.setAttribute('type', 'text')
     password.placeholder = "Society's Passcode"
     password.id = 'password'
     password.className = 'inputs'
+    password.autocomplete = 'off'
+    const alert = document.createElement('p')
+    alert.id = 'alert'
     const btnEnter = document.createElement('button')
     btnEnter.textContent = 'Get In Looser :p'
     btnEnter.className = 'buttons'
     btnEnter.addEventListener('click', () => {
-        createUserWithEmailAndPassword(auth, email.value, password.value)     
-            .then(() => {
-                //Salvar los datos del usuario (Firebase Store)
-                onNavigate('/message')
-            })
-            .catch((error) => {
-                if(password.value.length <= 6) alert('Your Password should have more than 6 characters')
-            });
-
+        if (password.value && email.value && pranksterName.value) {
+            createUserWithEmailAndPassword(auth, email.value, password.value)
+                .then((user) => {
+                    //Salvar los datos del usuario (Firebase Store)
+                    const docRef = addDoc(collection(db, "Pranksters"), {
+                        name: pranksterName.value,
+                        color: theColorOfTheButton,
+                        signInEmail: email.value
+                    })
+                        .then(() => {
+                            onNavigate('/message')
+                        })
+                        .catch((e) => {
+                            alert(e.message)
+                        })
+                    updateProfile(auth.currentUser, {
+                        displayName: pranksterName.value
+                    })
+                })
+                .catch((error) => {
+                    //const errorCode = error.code;
+                    if (password.value.length <= 6 && password.value) {
+                        alert.textContent = "Your password must have more than 6 characters"
+                    } else { alert.textContent = error.message }
+                });
+        } else { alert.textContent = "Please complete all the fields" }
     })
-
     const btnReturningPrankster = document.createElement('button')
     btnReturningPrankster.textContent = 'Have a prankster already?'
     btnReturningPrankster.className = 'footer'
@@ -112,7 +139,7 @@ export const Welcome = () => {
     footerPaperEffact.id = 'footerPaper'
 
     colorButtons.append(btnBlue, btnPink, btnOrange, btnYellow, btnGreen, btnPurple);
-    section.append(pranksterName, canvas, colorButtons, email, password, btnEnter);
+    section.append(pranksterName, canvas, colorButtons, email, password, alert, btnEnter);
     div.append(paperEffect, title, section, footerPaperEffact, btnReturningPrankster)
 
     return div

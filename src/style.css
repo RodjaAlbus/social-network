@@ -84,9 +84,13 @@ canvas {
     margin-bottom: 5%;
 }
 
-#password {
-    margin-bottom: 15%;
+#password, #password2 {
     -webkit-text-security: square;
+}
+
+#alert {
+    margin-bottom: 5%;
+    color: rgb(0, 0, 0);
 }
 
 #blue,
@@ -142,6 +146,7 @@ canvas {
 
 h2{
     color: rgb(255, 255, 255);
+    margin-top: 0;
 }
 
 p{
@@ -157,6 +162,9 @@ p{
 
 .inputs2::placeholder {
     color: rgb(255, 255, 255);
+}
+#password2{
+    margin-bottom: 0%;
 }
 
 .messageBG{

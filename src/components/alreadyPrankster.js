@@ -1,5 +1,5 @@
 import { onNavigate } from "../main.js"
-import { auth } from "../lib/config.js"
+import { auth } from "../lib/index.js"
 import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js'
 
 export const alreadyPrankster = () => {
@@ -24,9 +24,11 @@ export const alreadyPrankster = () => {
     pranksterName.placeholder = "Email"
     const password = document.createElement('input')
     password.setAttribute('type', 'text')
-    password.id = 'password'
+    password.id = 'password2'
     password.className = 'inputs2'
     password.placeholder = "whats your passcode?"
+    const alert = document.createElement('p')
+    alert.id = 'alert'
 
     const btnEnter = document.createElement('button')
     btnEnter.textContent = 'Get In Looser :p'
@@ -36,8 +38,11 @@ export const alreadyPrankster = () => {
             .then(() => {
                 onNavigate('/playground')
             })
-            .catch((error) => {
-                alert('Prankster not registered')
+            .catch((error, currentUser) => {
+                console.log(currentUser);
+                if(!password.value || !pranksterName.value) alert.textContent = "Please complete all the fields"
+                //else if(!auth.user.emailVerified) alert.textContent = "The user haven't been registered"
+                else{alert.textContent = error.message}   
             });
     })
 
@@ -48,7 +53,7 @@ export const alreadyPrankster = () => {
     const footerPaperEffact = document.createElement('div')
     footerPaperEffact.id = 'footerPaper'
 
-    section.append(sectionTitle, pranksterName, password, btnEnter,);
+    section.append(sectionTitle, pranksterName, password, alert, btnEnter,);
     div.append(paperEffect, title, section, footerPaperEffact, btnback)
 
     return div
