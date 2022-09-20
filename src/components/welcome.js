@@ -98,18 +98,21 @@ export const Welcome = () => {
   alert.id = 'alert'
   const btnEnter = document.createElement('button')
   btnEnter.textContent = 'Get In Looser :p'
+  btnEnter.id = 'buttonEnter'
   btnEnter.className = 'buttons'
   btnEnter.addEventListener('click', () => {
     if (password.value && email.value && pranksterName.value) {
       createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then((user) => {
+        .then(() => {
+          console.log('ENTRO ACA!')
           // Salvar los datos del usuario (Firebase Store)
-          const docRef = addDoc(collection(db, 'Pranksters'), {
+          addDoc(collection(db, 'Pranksters'), {
             name: pranksterName.value,
             color: theColorOfTheButton,
             signInEmail: email.value
           })
             .then(() => {
+              console.log('ENTRA DESPUES DE ADDOC')
               onNavigate('/message')
             })
             .catch((e) => {
