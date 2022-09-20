@@ -1,7 +1,6 @@
 import { auth } from "../lib/index.js"
 import { onNavigate } from "../main.js"
-import { updateProfile } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
-import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
+import { updateProfile, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
 import {
     getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField
 } from "https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore.js";
