@@ -1,0 +1,56 @@
+#lobby {
+    margin-top: 25%;
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+}
+
+#map {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    padding: 0%;
+}
+
+#movButtons {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    background-color: #79FF76;
+}
+
+#upBtn{
+    grid-column: 2;
+    grid-row: 1;
+    background-color: #79FF76;
+}
+
+#downBtn{
+    grid-column:  2;
+    grid-row: 2;
+    background-color: #79FF76;
+}
+
+#leftBtn{
+    grid-column: 1;
+    grid-row: 2;
+    clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+    background-color: #79FF76;
+}
+
+#rightBtn{
+    grid-column: 3;
+    grid-row: 2;
+    clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+    background-color: #79FF76;
+}

@@ -104,7 +104,6 @@ export const Welcome = () => {
     if (password.value && email.value && pranksterName.value) {
       createUserWithEmailAndPassword(auth, email.value, password.value)
         .then(() => {
-          console.log('ENTRO ACA!')
           // Salvar los datos del usuario (Firebase Store)
           addDoc(collection(db, 'Pranksters'), {
             name: pranksterName.value,
@@ -112,7 +111,6 @@ export const Welcome = () => {
             signInEmail: email.value
           })
             .then(() => {
-              console.log('ENTRA DESPUES DE ADDOC')
               onNavigate('/message')
             })
             .catch((e) => {
