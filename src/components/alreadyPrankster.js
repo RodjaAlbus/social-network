@@ -36,7 +36,8 @@ export const alreadyPrankster = () => {
   btnEnter.className = 'buttons'
   btnEnter.addEventListener('click', () => {
     signInWithEmailAndPassword(auth, pranksterName.value, password.value)
-      .then(() => {
+      .then((user) => {
+        console.log(user)
         onNavigate('/playground')
       })
       .catch((error, currentUser) => {

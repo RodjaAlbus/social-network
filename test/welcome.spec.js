@@ -7,12 +7,7 @@ describe('Welcome', () => {
 
   beforeEach(()=>{
     document.body.innerHTML = ''
-
     document.body.innerHTML = '<div id="root"></div>'
-    document.body.innerHTML += '<div id="Player"></div>'
-    document.body.innerHTML += '<div id="gameArea"></div>'
-    document.body.innerHTML += '<div id="roomVertical"></div>'
-    document.body.innerHTML += '<div id="roomHorizontal"></div>'
 
   })
 

@@ -103,8 +103,9 @@ export const Welcome = () => {
   btnEnter.addEventListener('click', () => {
     if (password.value && email.value && pranksterName.value) {
       createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then(() => {
+        .then((user) => {
           // Salvar los datos del usuario (Firebase Store)
+          console.log(user)
           addDoc(collection(db, 'Pranksters'), {
             name: pranksterName.value,
             color: theColorOfTheButton,
