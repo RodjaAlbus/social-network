@@ -33,17 +33,30 @@ export const playground = () => {
   //game part
   const gameArea = document.getElementById('gameArea')
   const image = document.createElement('img')
-  image.src = '../img/player/map.png'
+  image.src = '../img/player/mapVer2.png'
   image.id = 'map'
   const playerObj = document.createElement('div')
-  playerObj.id="Player"
+  playerObj.id = "Player"
   const pranksterName = document.createElement('p')
   pranksterName.id = 'pranksterName'
   pranksterName.textContent = auth.currentUser.displayName
 
   playerObj.appendChild(pranksterName)
-  gameArea.append(image, playerObj)
 
+
+  //BORDERS
+  const borderUp = document.createElement('div')
+  borderUp.id = 'brdrUp'
+  const borderLeft = document.createElement('div')
+  borderLeft.id = 'brdrLeft'
+  const borderRight = document.createElement('div')
+  borderRight.id = 'brdrRight'
+
+  const borders = [
+    borderUp, borderLeft, borderRight
+  ]
+
+  gameArea.append(image, playerObj, borderUp, borderLeft, borderRight)
   class Game {
     constructor() {
       this.input = new InputHandler()
@@ -51,7 +64,7 @@ export const playground = () => {
     }
 
     update() {
-      this.player.update(this.input.keys, this.input.lastKey)
+      this.player.update(this.input.keys, this.input.lastKey, borders)
     }
 
   }

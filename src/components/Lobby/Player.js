@@ -1,18 +1,20 @@
 
 export class Player {
   constructor(playerObj) {
-    this.countWS = 0
-    this.countDA = 0
+    this.countWS = document.getElementById('gameArea').offsetWidth/2
+    this.countDA = document.getElementById('gameArea').offsetHeight/2
     this.maxSpeed = 3
     this.velocity = { x: 0, y: 0 }
     this.playerObj = playerObj
     this.width = playerObj.offsetWidth
     this.height = playerObj.offsetHeight
-    this.gaWidth = document.getElementById('gameArea').offsetWidth - 30
-    this.gaHeight = document.getElementById('gameArea').offsetHeight - 30
+    this.gaWidth = document.getElementById('gameArea').offsetWidth
+    this.gaHeight = document.getElementById('gameArea').offsetHeight
   }
 
-  update(keys, lastKey) {
+  update(keys, lastKey, borders) {
+    this.checkForCollition(borders)
+
     this.countWS += this.velocity.y
     this.countDA += this.velocity.x
     this.playerObj.style.left = (String(this.countDA) + 'px')
@@ -29,10 +31,23 @@ export class Player {
       this.velocity = { x: 0, y: 0 }
     }
     // BORDES
-    if (this.countWS < 110) this.countWS = 110
-    if (this.countDA < 30) this.countDA = 30
+    if (this.countWS < 0) this.countWS = 0
+    if (this.countDA < 0) this.countDA = 0
     if (this.countWS > this.gaHeight - this.height) this.countWS = this.gaHeight - this.height
     if (this.countDA > this.gaWidth - this.width) this.countDA = this.gaWidth - this.width
+  }
+
+  checkForCollition(borders) {
+    let playerRect = this.playerObj.getBoundingClientRect()
+    borders.forEach(element => {
+      let boundaries = element.getBoundingClientRect()
+      if (playerRect.y + this.velocity.y <= boundaries.y + boundaries.height &&
+        playerRect.x + playerRect.width + this.velocity.x >= boundaries.x &&
+        playerRect.x + this.velocity.x <= boundaries.x + boundaries.width &&
+        playerRect.y + playerRect.height + this.velocity.y >= boundaries.y) {
+        this.velocity = { x: 0, y: 0 }
+      }
+    });
   }
 
 }
