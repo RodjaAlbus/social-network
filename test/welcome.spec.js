@@ -5,7 +5,7 @@ jest.mock('../src/importsFirebase.js')
 
 describe('Welcome', () => {
 
-  beforeEach(()=>{
+  beforeEach(() => {
     document.body.innerHTML = ''
 
     document.body.innerHTML = '<div id="root"></div>'
@@ -20,26 +20,29 @@ describe('Welcome', () => {
     //AAA: Arrange Act Assert
     //console.log(document.body.innerHTML)
     //Arrange:
-    
+
     //Act:
     document.getElementById('root').appendChild(Welcome())
-  
+
     //Assert:
     expect(document.body.innerHTML).toMatchSnapshot()
   })
 
-  it('should login successfully', ()=>{
+  it('should login successfully', () => {
     //Arrange:
+    jest.setTimeout(30000);
     document.getElementById('root').appendChild(Welcome())
     document.getElementById('name').value = 'rosalba'
     document.getElementById('email').value = 'rosalbamusician@gmail.com'
     document.getElementById('password').value = '12341234'
 
     //Act:
-    const btnEnter = document.getElementById('buttonEnter')
-    
+    const btnEnter = document.getElementById('buttonEnter').click()
+
     //Assert:
-    expect(btnEnter.click()).resolves.toBe({email: "rosalbamusician@gmail.com", password: '12341234'})
+    setTimeout(() => {
+      expect(window.location.pathname).toBe('/message');
+    }, 7000);
   })
 
 

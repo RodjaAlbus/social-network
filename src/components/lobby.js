@@ -1,9 +1,11 @@
-import { auth, signOut, getDoc } from "../importsFirebase.js";
+import { auth, signOut, query, where, db, collection, getDocs } from "../importsFirebase.js";
 import { onNavigate } from '../main.js'
 import { InputHandler } from './Lobby/input.js'
 import { Player } from './Lobby/Player.js'
+import { theEmail } from "./welcome.js";
+import { returningEmail } from "./alreadyPrankster.js";
 
-export const playground = () => {
+export const playground = async () => {
   const div = document.createElement('div')
 
   const title = document.createElement('h1')
@@ -37,12 +39,27 @@ export const playground = () => {
   image.id = 'map'
   const playerObj = document.createElement('div')
   playerObj.id = "Player"
+
   const pranksterName = document.createElement('p')
   pranksterName.id = 'pranksterName'
   pranksterName.textContent = auth.currentUser.displayName
 
-  playerObj.appendChild(pranksterName)
+  let emailMatcher;
+  if (!theEmail) {
+    emailMatcher = returningEmail
+  } else {
+    emailMatcher = theEmail
+  }
+  //Se puede uno solo?
+  const pranksterRef = collection(db, 'Pranksters')
+  const q = query(pranksterRef, where('signInEmail', '==', emailMatcher))
+  const qSnap = await getDocs(q)
+  qSnap.forEach(doc => {
+    playerObj.style.backgroundColor = doc.data().color
+    console.log(doc.id, " => ", doc.data())
+  });
 
+  playerObj.appendChild(pranksterName)
 
   //BORDERS
   const borderUp = document.createElement('div')

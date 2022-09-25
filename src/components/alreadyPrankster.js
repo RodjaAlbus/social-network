@@ -1,5 +1,6 @@
 import { onNavigate } from '../main.js'
 import { signInWithEmailAndPassword, auth } from '../importsFirebase.js'
+export let returningEmail;
 
 export const alreadyPrankster = () => {
   const div = document.createElement('div')
@@ -35,9 +36,9 @@ export const alreadyPrankster = () => {
   btnEnter.textContent = 'Get In Looser :p'
   btnEnter.className = 'buttons'
   btnEnter.addEventListener('click', () => {
-    signInWithEmailAndPassword(auth, pranksterName.value, password.value)
+    signInWithEmailAndPassword(auth, pranksterName.value.toLowerCase(), password.value)
       .then((user) => {
-        console.log(user)
+        returningEmail = pranksterName.value.toLowerCase()
         onNavigate('/playground')
       })
       .catch((error, currentUser) => {

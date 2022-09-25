@@ -1,5 +1,5 @@
 export {
-    updateProfile, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut
+    updateProfile, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously
 } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
 
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js'
@@ -9,7 +9,7 @@ export const auth = getAuth(app)
 //console.log(auth);
 
 export {
-    doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField
+    doc, getDocs, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField, query, where
 } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore.js'
 
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore.js'

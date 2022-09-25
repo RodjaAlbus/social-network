@@ -1,8 +1,9 @@
 import { onNavigate } from '../main.js'
 import {
-  auth, updateProfile, createUserWithEmailAndPassword, db, collection, addDoc
+  auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc
 } from '../importsFirebase.js'
 
+export let theEmail;
 
 export const Welcome = () => {
   const div = document.createElement('div')
@@ -20,7 +21,7 @@ export const Welcome = () => {
   pranksterName.placeholder = 'Name your prankster'
   pranksterName.id = 'name'
   pranksterName.className = 'inputs'
-  pranksterName.autocomplete = 'off'
+  //pranksterName.autocomplete = 'off'
 
   const canvas = document.createElement('canvas')
   canvas.width = 102
@@ -42,42 +43,42 @@ export const Welcome = () => {
   const btnBlue = document.createElement('button')
   btnBlue.id = 'blue'
   btnBlue.addEventListener('click', () => {
-    theColorOfTheButton = btnBlue.id
+    theColorOfTheButton = '#80d1f9'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(image, 16, 0, 16, 16, 0, 0, canvas.width, canvas.height)
   })
   const btnPink = document.createElement('button')
   btnPink.id = 'pink'
   btnPink.addEventListener('click', () => {
-    theColorOfTheButton = btnPink.id
+    theColorOfTheButton = '#f090d1'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(image, 16, 16, 16, 16, 0, 0, canvas.width, canvas.height)
   })
   const btnOrange = document.createElement('button')
   btnOrange.id = 'orange'
   btnOrange.addEventListener('click', () => {
-    theColorOfTheButton = btnOrange.id
+    theColorOfTheButton = '#ffa492'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(image, 16, (16 * 2), 16, 16, 0, 0, canvas.width, canvas.height)
   })
   const btnYellow = document.createElement('button')
   btnYellow.id = 'yellow'
   btnYellow.addEventListener('click', () => {
-    theColorOfTheButton = btnYellow.id
+    theColorOfTheButton = '#ffec9c'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(image, 16, (16 * 3), 16, 16, 0, 0, canvas.width, canvas.height)
   })
   const btnGreen = document.createElement('button')
   btnGreen.id = 'green'
   btnGreen.addEventListener('click', () => {
-    theColorOfTheButton = btnGreen.id
+    theColorOfTheButton = '#b7ff81'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(image, 16, (16 * 4), 16, 16, 0, 0, canvas.width, canvas.height)
   })
   const btnPurple = document.createElement('button')
   btnPurple.id = 'purple'
   btnPurple.addEventListener('click', () => {
-    theColorOfTheButton = btnPurple.id
+    theColorOfTheButton = '#b18aff'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(image, 16, (16 * 5), 16, 16, 0, 0, canvas.width, canvas.height)
   })
@@ -87,13 +88,13 @@ export const Welcome = () => {
   email.placeholder = 'Email'
   email.id = 'email'
   email.className = 'inputs'
-  email.autocomplete = 'off'
+  //email.autocomplete = 'off'
   const password = document.createElement('input')
   password.setAttribute('type', 'text')
   password.placeholder = "Society's Passcode"
   password.id = 'password'
   password.className = 'inputs'
-  password.autocomplete = 'off'
+  //password.autocomplete = 'off'
   const alert = document.createElement('p')
   alert.id = 'alert'
   const btnEnter = document.createElement('button')
@@ -102,16 +103,18 @@ export const Welcome = () => {
   btnEnter.className = 'buttons'
   btnEnter.addEventListener('click', () => {
     if (password.value && email.value && pranksterName.value) {
-      createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then((user) => {
+      createUserWithEmailAndPassword(auth, email.value.toLowerCase(), password.value)
+        .then(() => {
           // Salvar los datos del usuario (Firebase Store)
-          console.log(user)
+          theEmail = email.value
           addDoc(collection(db, 'Pranksters'), {
-            name: pranksterName.value,
             color: theColorOfTheButton,
-            signInEmail: email.value
+            signInEmail: email.value.toLowerCase(),
+            x: 50,
+            y: 50
           })
-            .then(() => {
+            .then((data) => {
+              //console.log(data._key.path.segments[1])
               onNavigate('/message')
             })
             .catch((e) => {
