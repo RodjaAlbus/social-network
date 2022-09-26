@@ -3,8 +3,6 @@ import {
   auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc
 } from '../importsFirebase.js'
 
-export let theEmail;
-
 export const Welcome = () => {
   const div = document.createElement('div')
 
@@ -107,13 +105,10 @@ export const Welcome = () => {
       createUserWithEmailAndPassword(auth, email.value.toLowerCase(), password.value)
         .then(() => {
           // Salvar los datos del usuario (Firebase Store)
-          theEmail = email.value
           addDoc(collection(db, 'Pranksters'), {
             color: theColorOfTheButton,
             signInEmail: email.value.toLowerCase(),
-            name: pranksterName.value,
-            top: 22.22,
-            left: 33.33
+            userID: auth.currentUser.uid
           })
             .then((data) => {
               console.log(data)

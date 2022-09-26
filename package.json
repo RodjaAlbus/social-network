@@ -28,6 +28,7 @@
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-promise": "^6.0.1",
+    "firebase-tools": "^11.10.0",
     "htmlhint": "^1.0.0",
     "jest": "^27.0.1",
     "regenerator-runtime": "^0.13.1",

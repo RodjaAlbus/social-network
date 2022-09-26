@@ -1,14 +1,12 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-app.js'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCSgD9_s8A4dYNczhLP1SleKJqKEvOXWSk',
-  authDomain: 'prank-society.firebaseapp.com',
-  databaseURL: 'https://prank-society-default-rtdb.firebaseio.com',
-  projectId: 'prank-society',
-  storageBucket: 'prank-society.appspot.com',
-  messagingSenderId: '277869336834',
-  appId: '1:277869336834:web:6d9d21dea74baf835aca1b',
-  measurementId: 'G-4QJG1KFMD7'
+  apiKey: "AIzaSyDz8AoaCKkmYMybgTD9W-qE4HIx6On3v4A",
+  authDomain: "prankster-f333e.firebaseapp.com",
+  projectId: "prankster-f333e",
+  storageBucket: "prankster-f333e.appspot.com",
+  messagingSenderId: "524148413000",
+  appId: "1:524148413000:web:1d0ae589bea4e3084c3e7d"
 }
 
 export const app = initializeApp(firebaseConfig)
