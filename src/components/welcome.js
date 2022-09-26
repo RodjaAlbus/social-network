@@ -110,10 +110,12 @@ export const Welcome = () => {
           addDoc(collection(db, 'Pranksters'), {
             color: theColorOfTheButton,
             signInEmail: email.value.toLowerCase(),
-            x: 50,
-            y: 50
+            name: pranksterName.value,
+            x:0,
+            y:0
           })
             .then((data) => {
+              console.log(data)
               //console.log(data._key.path.segments[1])
               onNavigate('/message')
             })

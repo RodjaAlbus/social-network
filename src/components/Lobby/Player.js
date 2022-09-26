@@ -1,3 +1,4 @@
+import { updateDoc } from "../../importsFirebase.js"
 
 export class Player {
   constructor(playerObj) {
@@ -12,7 +13,7 @@ export class Player {
     this.gaHeight = document.getElementById('gameArea').offsetHeight
   }
 
-  update(keys, lastKey, borders) {
+  update(keys, lastKey, borders, pranksterRef) {
     this.checkForCollition(borders)
 
     this.countWS += this.velocity.y
@@ -29,6 +30,13 @@ export class Player {
       this.velocity.x = -this.maxSpeed
     } else {
       this.velocity = { x: 0, y: 0 }
+    }
+
+    if(keys.w.pressed || keys.s.pressed || keys.d.pressed || keys.a.pressed) {
+      updateDoc(pranksterRef, {
+        x: this.countDA,
+        y: this.countWS
+      });
     }
     // BORDES
     if (this.countWS < 0) this.countWS = 0
