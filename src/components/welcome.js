@@ -21,6 +21,7 @@ export const Welcome = () => {
   pranksterName.placeholder = 'Name your prankster'
   pranksterName.id = 'name'
   pranksterName.className = 'inputs'
+  pranksterName.maxLength = 5
   //pranksterName.autocomplete = 'off'
 
   const canvas = document.createElement('canvas')
@@ -111,8 +112,8 @@ export const Welcome = () => {
             color: theColorOfTheButton,
             signInEmail: email.value.toLowerCase(),
             name: pranksterName.value,
-            x:0,
-            y:0
+            top: 22.22,
+            left: 33.33
           })
             .then((data) => {
               console.log(data)

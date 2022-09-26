@@ -2,8 +2,8 @@ import { updateDoc } from "../../importsFirebase.js"
 
 export class Player {
   constructor(playerObj) {
-    this.countWS = document.getElementById('gameArea').offsetWidth/2
-    this.countDA = document.getElementById('gameArea').offsetHeight/2
+    this.countWS = document.getElementById('gameArea').offsetWidth / 2
+    this.countDA = document.getElementById('gameArea').offsetHeight / 2
     this.maxSpeed = 3
     this.velocity = { x: 0, y: 0 }
     this.playerObj = playerObj
@@ -32,17 +32,13 @@ export class Player {
       this.velocity = { x: 0, y: 0 }
     }
 
-    if(keys.w.pressed || keys.s.pressed || keys.d.pressed || keys.a.pressed) {
+    if (keys.w.pressed || keys.s.pressed || keys.d.pressed || keys.a.pressed) {
       updateDoc(pranksterRef, {
-        x: this.countDA,
-        y: this.countWS
+        top: this.playerObj.getBoundingClientRect().top,
+        left: this.playerObj.getBoundingClientRect().left
       });
+      console.log(this.playerObj.getBoundingClientRect())
     }
-    // BORDES
-    if (this.countWS < 0) this.countWS = 0
-    if (this.countDA < 0) this.countDA = 0
-    if (this.countWS > this.gaHeight - this.height) this.countWS = this.gaHeight - this.height
-    if (this.countDA > this.gaWidth - this.width) this.countDA = this.gaWidth - this.width
   }
 
   checkForCollition(borders) {
