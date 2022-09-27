@@ -9,7 +9,7 @@ import { Player } from './Lobby/Player.js'
 import { deleteDoc, addDoc, onAuthStateChanged, doc, database } from "../importsFirebase.js";
 //TEST
 
-export const playground = async () => {
+export const playground = () => {
   const div = document.createElement('div')
 
   const title = document.createElement('h1')
@@ -23,17 +23,28 @@ export const playground = async () => {
   //ADDING REMOVABLE COLLECTION TO STORE MOVEMENT----------------------
   //Se puede uno solo?
   const pranksterRef = collection(db, 'Pranksters')
-  const query = query(pranksterRef, where('userID', '==', auth.currentUser.uid))
-  const qSnap = await getDocs(query)
-  addDoc(collection(db, 'PranksterMove'), {
-    name: auth.currentUser.displayName,
-    userID: auth.currentUser.uid,
-    color: qSnap.doc[0].data().color,
-    top: 195.22,
-    left: 190.33
+  const qy = query(pranksterRef, where('userID', '==', auth.currentUser.uid))
+  getDocs(qy)
+  .then((qSnap) => {
+    let actualColor
+    qSnap.forEach(doc => {
+      actualColor = doc.data().color
+    });  
+    addDoc(collection(db, 'PranksterMove'), {
+      name: auth.currentUser.displayName,
+      userID: auth.currentUser.uid,
+      color: actualColor,
+      top: 195.22,
+      left: 190.33
+    })
+      .then((data) => {
+        playerRef = doc(db, 'PranksterMove', data._key.path.segments[1])
+        console.log('data:', data._key.path.segments[1])
+        console.log('playerRef:', playerRef)
+      })
+      .catch((e) => { console.log('error creating doc:',  e) })
   })
-    .then((user) => { console.log(user)})
-    .catch((e) => { console.log(e) })
+
 
   //CLOSE SESION PART-------------------------------------------------
   const logOut = document.createElement('div')
@@ -52,8 +63,10 @@ export const playground = async () => {
 
   onAuthStateChanged(auth, (user) => {
     if (!user) {
-      deleteDoc()
-    } 
+      deleteDoc(playerRef)
+      .then((data) => {console.log('signOut:' , data)})
+      .catch((e) => { console.log('error singing out: ', e)  })
+    }
   });
 
   //we have to remove from firestore
@@ -75,9 +88,9 @@ export const playground = async () => {
       if (change.type === "added") { //Si hay documentos en firestore o se añaden más
         const newPlayer = document.createElement('div') //crearelobjeto del jugador
         newPlayer.id = 'Player'
-        if (dataGeter.userID.stringValue === playerId) {
+        if (dataGeter.userID.stringValue === auth.currentUser.uid) {
           newPlayer.className = "You" //Si eres tu, te pondra borde rojo
-          gameStarter(newPlayer); //Luego te metera al juego
+          gameStarter(newPlayer) //Luego te metera al juego
         } else {
           newPlayer.className = dataGeter.userID.stringValue
         }
@@ -85,7 +98,7 @@ export const playground = async () => {
         newPlayer.style.top = dataGeter.top.doubleValue + 5 + "px"
         newPlayer.style.left = dataGeter.left.doubleValue + 8 + 'px'
         const playerName = document.createElement('p')
-        playerName.id  = 'pranksterName'
+        playerName.id = 'pranksterName'
         playerName.textContent = dataGeter.name.stringValue
         newPlayer.appendChild(playerName)
         gameArea.appendChild(newPlayer)
@@ -98,16 +111,15 @@ export const playground = async () => {
         }
       }
       else if (change.type === 'removed') {
+        console.log('REMOVED SOONNN')
         const otherPlayer = document.getElementsByClassName(dataGeter.userID.stringValue)
-        gameArea.remove(otherPlayer[0])
+        console.log(otherPlayer)
+        otherPlayer[0].remove()
       }
-
-      //console.log(doc.data().x, "   ", doc.data().x)
       console.log(change.type)
-      //thePlayers.push(doc.data().playerId);
     });
-    //console.log("Current players", thePlayers.join(", "));
   });
+
   gameArea.append(image, borderUp, borderLeft, borderRight, borderBottom)
 
   //write a message part
@@ -117,8 +129,7 @@ export const playground = async () => {
   return div
 }
 
-let playerId;
-let playerRef = ;
+export let playerRef
 const borderUp = document.createElement('div')
 borderUp.id = 'brdrUp'
 const borderLeft = document.createElement('div')
@@ -141,6 +152,9 @@ const gameStarter = (playerObj) => {
     requestAnimationFrame(animate)
   }
   animate(0)
+  if(!auth.currentUser){
+    return;
+  }
 }
 
 

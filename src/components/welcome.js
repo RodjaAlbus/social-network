@@ -1,7 +1,8 @@
 import { onNavigate } from '../main.js'
 import {
-  auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc
+  auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc, deleteDoc
 } from '../importsFirebase.js'
+import { playerRef } from './lobby.js'
 
 export const Welcome = () => {
   const div = document.createElement('div')
@@ -136,6 +137,9 @@ export const Welcome = () => {
   btnReturningPrankster.addEventListener('click', () => onNavigate('/returningPrankster'))
   const footerPaperEffact = document.createElement('div')
   footerPaperEffact.id = 'footerPaper'
+
+  //USER SIGN OUT --------------------------------------------------------------------------------
+
 
   colorButtons.append(btnBlue, btnPink, btnOrange, btnYellow, btnGreen, btnPurple)
   section.append(pranksterName, canvas, colorButtons, email, password, alert, btnEnter)

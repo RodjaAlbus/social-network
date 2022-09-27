@@ -21,13 +21,13 @@ export const alreadyPrankster = () => {
   pranksterName.className = 'inputs2'
   pranksterName.setAttribute('type', 'text')
   pranksterName.placeholder = 'Email'
-  pranksterName.autocomplete = 'off'
+  //pranksterName.autocomplete = 'off'
   const password = document.createElement('input')
   password.setAttribute('type', 'text')
   password.id = 'password2'
   password.className = 'inputs2'
   password.placeholder = 'whats your passcode?'
-  password.autocomplete = 'off'
+  //password.autocomplete = 'off'
   const alert = document.createElement('p')
   alert.id = 'alert'
 
@@ -39,8 +39,7 @@ export const alreadyPrankster = () => {
       .then((user) => {
         onNavigate('/playground')
       })
-      .catch((error, currentUser) => {
-        console.log(currentUser)
+      .catch((error) => {
         if (!password.value || !pranksterName.value) alert.textContent = 'Please complete all the fields'
         // else if(!auth.user.emailVerified) alert.textContent = "The user haven't been registered"
         else { alert.textContent = error.message }

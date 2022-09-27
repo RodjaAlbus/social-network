@@ -19,9 +19,8 @@ export const onNavigate = (pathname) => {
     window.location.origin + pathname
   )
   root.removeChild(root.firstChild)
-  while(gameArea.children.length > 0) {
-    gameArea.removeChild(gameArea.firstChild)
-  }
+  console.log(gameArea)
+  gameArea.innerHTML = ""
   root.appendChild(routes[pathname]())
 }
 
