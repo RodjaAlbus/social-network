@@ -1,13 +1,10 @@
 import {
-  auth, signOut, query, where, db, collection, getDocs, onSnapshot
+  auth, signOut, query, where, db, collection, getDocs, onSnapshot, updateDoc,
+  deleteDoc, addDoc, onAuthStateChanged, doc
 } from "../importsFirebase.js";
 import { onNavigate } from '../main.js'
 import { InputHandler } from './Lobby/input.js'
 import { Player } from './Lobby/Player.js'
-
-//TEST
-import { deleteDoc, addDoc, onAuthStateChanged, doc, database } from "../importsFirebase.js";
-//TEST
 
 export const playground = () => {
   const div = document.createElement('div')
@@ -20,6 +17,7 @@ export const playground = () => {
   const alert = document.createElement('p')
   alert.id = 'alert'
 
+  /*
   //ADDING REMOVABLE COLLECTION TO STORE MOVEMENT----------------------
   //Se puede uno solo?
   const pranksterRef = collection(db, 'Pranksters')
@@ -44,6 +42,7 @@ export const playground = () => {
       })
       .catch((e) => { console.log('error creating doc:',  e) })
   })
+  */
 
 
   //CLOSE SESION PART-------------------------------------------------
@@ -64,8 +63,8 @@ export const playground = () => {
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       deleteDoc(playerRef)
-      .then((data) => {console.log('signOut:' , data)})
-      .catch((e) => { console.log('error singing out: ', e)  })
+        .then((data) => { console.log('signOut:', data) })
+        .catch((e) => { console.log('error singing out: ', e) })
     }
   });
 
@@ -78,6 +77,20 @@ export const playground = () => {
   image.src = '../img/player/mapVer2.png'
   image.id = 'map'
 
+  const borderUp = document.createElement('div')
+  borderUp.id = 'brdrUp'
+  const borderLeft = document.createElement('div')
+  borderLeft.id = 'brdrLeft'
+  const borderRight = document.createElement('div')
+  borderRight.id = 'brdrRight'
+  const borderBottom = document.createElement('div')
+  borderBottom.id = 'brdrBottom'
+
+  const borders = [
+    borderUp, borderLeft, borderRight, borderBottom
+  ]
+
+  /*
   //INTEGRATING PLAYERS------------------------------------------------
   const q = query(collection(db, "PranksterMove"));
   const allPlayers = onSnapshot(q, (querySnapshot) => {
@@ -119,42 +132,80 @@ export const playground = () => {
       console.log(change.type)
     });
   });
+  */
 
   gameArea.append(image, borderUp, borderLeft, borderRight, borderBottom)
+
+  //BUTTONS PART-------------------------------------------------------------------------
+  const footerPaperEffact = document.createElement('footer')
+  footerPaperEffact.id = 'extendedFooterPaper'
+  const footer = document.createElement('footer')
+  footer.className = 'extendedFooter'
+
+  const innerText = document.createElement('h3')
+  innerText.textContent = "Move your prankster"
+
+  //TESTING PURPOSES
+  const playerObj = document.createElement('div')
+  playerObj.id = "Player"
+  playerObj.className = 'You'
+  gameArea.appendChild(playerObj)
+  //TESTING PURPOSES
+
+  const currentPlayer = new Player(playerObj)
+  const buttonUpContainr = document.createElement('div')
+  buttonUpContainr.id = 'btnUpContainer'
+  const buttonUp = document.createElement('button')
+  buttonUp.id = 'btnUp'
+  buttonUp.addEventListener('click', ()=>{
+    currentPlayer.update('up', borders)
+    updateFirestore();
+  })
+  buttonUp.textContent = '^'
+  const buttons = document.createElement('div')
+  buttons.id = 'movementButtons'
+  const buttonDown = document.createElement('button')
+  buttonDown.id = 'btnDown'
+  buttonDown.textContent = 'v'
+  buttonDown.addEventListener('click', ()=>{
+    currentPlayer.update('down', borders)
+    updateFirestore();
+  })
+  const buttonLeft = document.createElement('button')
+  buttonLeft.id = 'btnLeft'
+  buttonLeft.textContent = '<'
+  buttonLeft.addEventListener('click', ()=>{
+    currentPlayer.update('right', borders)
+    updateFirestore();
+  })
+  const buttonRight = document.createElement('button')
+  buttonRight.id = 'btnRight'
+  buttonRight.textContent = '>'
+  buttonRight.addEventListener('click', ()=>{
+    currentPlayer.update('left', borders)
+    updateFirestore();
+  })
+
+  buttonUpContainr.appendChild(buttonUp)
+  buttons.append(buttonLeft, buttonDown, buttonRight)
+
+  footer.append(innerText, buttonUpContainr,  buttons)
+
+  //DOORS PART----------------------------------------------------------------------------------------
 
   //write a message part
   //const footer =  document.createElement('footer')
 
-  div.append(paperEffect, title, logOut, alert)
+  div.append(paperEffect, title, logOut, alert, footerPaperEffact, footer)
   return div
 }
 
 export let playerRef
-const borderUp = document.createElement('div')
-borderUp.id = 'brdrUp'
-const borderLeft = document.createElement('div')
-borderLeft.id = 'brdrLeft'
-const borderRight = document.createElement('div')
-borderRight.id = 'brdrRight'
-const borderBottom = document.createElement('div')
-borderBottom.id = 'brdrBottom'
 
-const borders = [
-  borderUp, borderLeft, borderRight, borderBottom
-]
-
-const gameStarter = (playerObj) => {
-  const currentPlayer = new Player(playerObj)
-  const input = new InputHandler()
-
-  function animate(timeStamp) {
-    currentPlayer.update(input.keys, input.lastKey, borders, playerRef)
-    requestAnimationFrame(animate)
-  }
-  animate(0)
-  if(!auth.currentUser){
-    return;
-  }
+const updateFirestore = (playerRef) => {
+  /*updateDoc(playerRef, {
+    top: this.playerObj.getBoundingClientRect().top,
+    left: this.playerObj.getBoundingClientRect().left
+  });
+  console.log(this.playerObj.getBoundingClientRect())*/
 }
-
-

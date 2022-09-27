@@ -1,10 +1,8 @@
-import { updateDoc } from "../../importsFirebase.js"
-
 export class Player {
   constructor(playerObj) {
     this.countWS = document.getElementById('gameArea').offsetWidth / 2
     this.countDA = document.getElementById('gameArea').offsetHeight / 2
-    this.maxSpeed = 3
+    this.maxSpeed = 10
     this.velocity = { x: 0, y: 0 }
     this.playerObj = playerObj
     this.width = playerObj.offsetWidth
@@ -13,31 +11,28 @@ export class Player {
     this.gaHeight = document.getElementById('gameArea').offsetHeight
   }
 
-  update(keys, lastKey, borders, pranksterRef) {
+  update(key, borders) {
     this.checkForCollition(borders)
 
     this.countWS += this.velocity.y
     this.countDA += this.velocity.x
     this.playerObj.style.left = (String(this.countDA) + 'px')
     this.playerObj.style.top = (String(this.countWS) + 'px')
-    if (keys.w.pressed && lastKey === 'w') {
+    if (key === 'up') {
       this.velocity.y = -this.maxSpeed
-    } else if (keys.s.pressed && lastKey === 's') {
+      this.velocity.x = 0
+    } 
+    if (key === 'down') {
       this.velocity.y = this.maxSpeed
-    } else if (keys.d.pressed && lastKey === 'd') {
+      this.velocity.x = 0
+    } 
+    if (key === 'left') {
       this.velocity.x = this.maxSpeed
-    } else if (keys.a.pressed && lastKey === 'a') {
+      this.velocity.y = 0
+    } 
+    if (key === 'right') {
       this.velocity.x = -this.maxSpeed
-    } else {
-      this.velocity = { x: 0, y: 0 }
-    }
-
-    if (keys.w.pressed || keys.s.pressed || keys.d.pressed || keys.a.pressed) {
-      updateDoc(pranksterRef, {
-        top: this.playerObj.getBoundingClientRect().top,
-        left: this.playerObj.getBoundingClientRect().left
-      });
-      console.log(this.playerObj.getBoundingClientRect())
+      this.velocity.y = 0
     }
   }
 
