@@ -33,8 +33,8 @@ export const playground = () => {
         name: auth.currentUser.displayName,
         userID: auth.currentUser.uid,
         color: actualColor,
-        top: 195.22,
-        left: 190.33
+        top: 353.5,
+        left: 173.5  //RECORDAR QUE TIENE Q UE TENER PUTNO DESIMAL PARA QUE LO PUIEDA LEEERRRR
       })
         .then((data) => {
           playerRef = doc(db, 'PranksterMove', data._key.path.segments[1])
@@ -91,7 +91,6 @@ export const playground = () => {
 
 
   //INTEGRATING PLAYERS------------------------------------------------
-  let playerObj;
   const q = query(collection(db, "PranksterMove"));
   const allPlayers = onSnapshot(q, (querySnapshot) => {
     //console.log(querySnapshot)
@@ -103,16 +102,15 @@ export const playground = () => {
         newPlayer.id = 'Player'
         if (dataGeter.userID.stringValue === auth.currentUser.uid) {
           newPlayer.className = "You" //Si eres tu, te pondra borde rojo
-          playerObj = newPlayer //Luego te metera al juego
-          currentPlayer = new Player(newPlayer, playerRef)
+          currentPlayer = new Player(newPlayer)
         } else {
           newPlayer.className = dataGeter.userID.stringValue
         }
         newPlayer.style.backgroundColor = dataGeter.color.stringValue
-        newPlayer.style.top = dataGeter.top.doubleValue + 5 + "px"
-        newPlayer.style.left = dataGeter.left.doubleValue + 8 + 'px'
+        newPlayer.style.top = dataGeter.top.doubleValue + "px"
+        newPlayer.style.left = dataGeter.left.doubleValue + 'px'
         const playerName = document.createElement('p')
-        playerName.id = 'pranksterName'
+       // playerName.id = 'pranksterName'
         playerName.textContent = dataGeter.name.stringValue
         newPlayer.appendChild(playerName)
         gameArea.appendChild(newPlayer)
@@ -120,8 +118,10 @@ export const playground = () => {
       else if (change.type === 'modified') {
         const otherPlayers = document.getElementsByClassName(dataGeter.userID.stringValue)
         if (otherPlayers[0]) {
-          otherPlayers[0].style.top = dataGeter.top.doubleValue + 5 + "px"
-          otherPlayers[0].style.left = dataGeter.left.doubleValue + 8 + 'px'
+          otherPlayers[0].style.top = dataGeter.top.doubleValue + "px"
+          otherPlayers[0].style.left = dataGeter.left.doubleValue + 'px'
+          console.log('left: ', dataGeter.left.doubleValue)
+          console.log('dataGeter: ', dataGeter)
         }
       }
       else if (change.type === 'removed') {
@@ -161,7 +161,7 @@ export const playground = () => {
   buttonUp.id = 'btnUp'
   buttonUp.addEventListener('click', () => {
     if (window.location.pathname === '/playground') {
-      currentPlayer.update('up', borders, postsDoor)
+      currentPlayer.update('up', borders, postsDoor, playerRef)
     }
   })
   buttonUp.textContent = '^'
@@ -172,7 +172,7 @@ export const playground = () => {
   buttonDown.textContent = 'v'
   buttonDown.addEventListener('click', () => {
     if (window.location.pathname === '/playground') {
-      currentPlayer.update('down', borders, postsDoor)
+      currentPlayer.update('down', borders, postsDoor, playerRef)
     }
   })
   const buttonLeft = document.createElement('button')
@@ -180,7 +180,7 @@ export const playground = () => {
   buttonLeft.textContent = '<'
   buttonLeft.addEventListener('click', () => {
     if (window.location.pathname === '/playground') {
-      currentPlayer.update('right', borders, postsDoor)
+      currentPlayer.update('right', borders, postsDoor, playerRef)
     }
   })
   const buttonRight = document.createElement('button')
@@ -188,7 +188,7 @@ export const playground = () => {
   buttonRight.textContent = '>'
   buttonRight.addEventListener('click', () => {
     if (window.location.pathname === '/playground') {
-      currentPlayer.update('left', borders, postsDoor)
+      currentPlayer.update('left', borders, postsDoor, playerRef)
     }
   })
 
@@ -203,8 +203,8 @@ export const playground = () => {
 
   gameArea.append(postsDoor)
 
-  //write a message part
-  //const footer =  document.createElement('footer')
+  //SHOW POST TOLD--------------------------------------------------------------------------
+  /**/
 
   div.append(paperEffect, title, logOut, alert, footerPaperEffact, footer)
   return div

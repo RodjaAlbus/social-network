@@ -2,8 +2,8 @@ import { updateDoc } from "../../importsFirebase.js"
 import { onNavigate } from "../../main.js"
 
 export class Player {
-  constructor(playerObj, playerRef) {
-    this.countWS = document.getElementById('gameArea').offsetWidth
+  constructor(playerObj) {
+    this.countWS = document.getElementById('gameArea').offsetWidth + .5 //PUNTO DECIMAL PARA QUE FIRESTORE LO PUEDA LEER
     this.countDA = document.getElementById('gameArea').offsetHeight / 2
     this.maxSpeed = 25
     this.velocity = { x: 0, y: 0 }
@@ -12,10 +12,10 @@ export class Player {
     this.height = playerObj.offsetHeight
     this.gaWidth = document.getElementById('gameArea').offsetWidth
     this.gaHeight = document.getElementById('gameArea').offsetHeight
-    this.playerRef = playerRef
+    
   }
 
-  update(key, borders, doors) {
+  update(key, borders, doors, playerRef) {
     switch (key) {
       case 'up':
         this.velocity.y = -this.maxSpeed
@@ -32,21 +32,23 @@ export class Player {
       case 'right':
         this.velocity.x = -this.maxSpeed
         this.velocity.y = 0
+
         break;
     }
     this.checkForCollition(borders)
     this.checkForDoors(doors)
-    console.log(key)
     this.countWS += this.velocity.y
     this.countDA += this.velocity.x
     this.playerObj.style.left = (String(this.countDA) + 'px')
     this.playerObj.style.top = (String(this.countWS) + 'px')
+    console.log(playerRef)
 
-    updateDoc(this.playerRef, {
+    //UPDATE FIRESTORE----------------------------------------------------------------------
+    updateDoc(playerRef, {
       top: this.playerObj.getBoundingClientRect().top,
       left: this.playerObj.getBoundingClientRect().left
-    });
-    //console.log(this.playerObj.getBoundingClientRect())
+    })
+    console.log(this.playerObj.getBoundingClientRect().top)
   }
 
   checkForCollition(borders) {
