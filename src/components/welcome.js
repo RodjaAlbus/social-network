@@ -2,7 +2,6 @@ import { onNavigate } from '../main.js'
 import {
   auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc, deleteDoc
 } from '../importsFirebase.js'
-import { playerRef } from './lobby.js'
 
 export const Welcome = () => {
   const div = document.createElement('div')
@@ -21,7 +20,7 @@ export const Welcome = () => {
   pranksterName.id = 'name'
   pranksterName.className = 'inputs'
   pranksterName.maxLength = 5
-  //pranksterName.autocomplete = 'off'
+  pranksterName.autocomplete = 'off'
 
   const canvas = document.createElement('canvas')
   canvas.width = 102
@@ -88,13 +87,13 @@ export const Welcome = () => {
   email.placeholder = 'Email'
   email.id = 'email'
   email.className = 'inputs'
-  //email.autocomplete = 'off'
+  email.autocomplete = 'off'
   const password = document.createElement('input')
   password.setAttribute('type', 'text')
   password.placeholder = "Society's Passcode"
   password.id = 'password'
   password.className = 'inputs'
-  //password.autocomplete = 'off'
+  password.autocomplete = 'off'
   const alert = document.createElement('p')
   alert.id = 'alert'
   const btnEnter = document.createElement('button')

@@ -48,11 +48,10 @@
 #brdrUp,
 #brdrLeft,
 #brdrRight{
-    /*background-color: #78ff7638;*/
     position: absolute;
     top: 0%;
     z-index: 6;
-    background-color: rgba(189, 255, 127, 0.372);
+   /* background-color: rgba(189, 255, 127, 0.372);*/
 }
 
 #brdrUp {
@@ -79,7 +78,7 @@
     height: 2%;
     width: 100%;
     z-index: 6;
-    background-color: rgba(189, 255, 127, 0.372);
+    /*background-color: rgba(189, 255, 127, 0.372);*/
 }
 
 .You{
@@ -87,5 +86,15 @@
     border-radius: 50%;
     border-width: 1px;
     border-color: rgb(199, 21, 21);
+}
+
+#postsDoor{
+    position: absolute;
+    z-index: 6;
+    background-color: rgba(128, 255, 0, 0.541);
+    top: 0%;
+    right: 22%;
+    height: 27%;
+    width: 12%;
 }
 

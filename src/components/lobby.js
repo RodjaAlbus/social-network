@@ -1,5 +1,5 @@
 import {
-  auth, signOut, query, where, db, collection, getDocs, onSnapshot, updateDoc,
+  auth, signOut, query, where, db, collection, getDocs, onSnapshot,
   deleteDoc, addDoc, onAuthStateChanged, doc
 } from "../importsFirebase.js";
 import { onNavigate } from '../main.js'
@@ -17,33 +17,32 @@ export const playground = () => {
   const alert = document.createElement('p')
   alert.id = 'alert'
 
-  /*
+
   //ADDING REMOVABLE COLLECTION TO STORE MOVEMENT----------------------
   //Se puede uno solo?
+  let playerRef
   const pranksterRef = collection(db, 'Pranksters')
   const qy = query(pranksterRef, where('userID', '==', auth.currentUser.uid))
   getDocs(qy)
-  .then((qSnap) => {
-    let actualColor
-    qSnap.forEach(doc => {
-      actualColor = doc.data().color
-    });  
-    addDoc(collection(db, 'PranksterMove'), {
-      name: auth.currentUser.displayName,
-      userID: auth.currentUser.uid,
-      color: actualColor,
-      top: 195.22,
-      left: 190.33
-    })
-      .then((data) => {
-        playerRef = doc(db, 'PranksterMove', data._key.path.segments[1])
-        console.log('data:', data._key.path.segments[1])
-        console.log('playerRef:', playerRef)
+    .then((qSnap) => {
+      let actualColor
+      qSnap.forEach(doc => {
+        actualColor = doc.data().color
+      });
+      addDoc(collection(db, 'PranksterMove'), {
+        name: auth.currentUser.displayName,
+        userID: auth.currentUser.uid,
+        color: actualColor,
+        top: 195.22,
+        left: 190.33
       })
-      .catch((e) => { console.log('error creating doc:',  e) })
-  })
-  */
-
+        .then((data) => {
+          playerRef = doc(db, 'PranksterMove', data._key.path.segments[1])
+          console.log('data:', data._key.path.segments[1])
+          console.log('playerRef:', playerRef)
+        })
+        .catch((e) => { console.log('error creating doc:', e) })
+    })
 
   //CLOSE SESION PART-------------------------------------------------
   const logOut = document.createElement('div')
@@ -90,8 +89,9 @@ export const playground = () => {
     borderUp, borderLeft, borderRight, borderBottom
   ]
 
-  /*
+
   //INTEGRATING PLAYERS------------------------------------------------
+  let playerObj;
   const q = query(collection(db, "PranksterMove"));
   const allPlayers = onSnapshot(q, (querySnapshot) => {
     //console.log(querySnapshot)
@@ -103,7 +103,8 @@ export const playground = () => {
         newPlayer.id = 'Player'
         if (dataGeter.userID.stringValue === auth.currentUser.uid) {
           newPlayer.className = "You" //Si eres tu, te pondra borde rojo
-          gameStarter(newPlayer) //Luego te metera al juego
+          playerObj = newPlayer //Luego te metera al juego
+          currentPlayer = new Player(newPlayer, playerRef)
         } else {
           newPlayer.className = dataGeter.userID.stringValue
         }
@@ -132,7 +133,7 @@ export const playground = () => {
       console.log(change.type)
     });
   });
-  */
+
 
   gameArea.append(image, borderUp, borderLeft, borderRight, borderBottom)
 
@@ -146,20 +147,22 @@ export const playground = () => {
   innerText.textContent = "Move your prankster"
 
   //TESTING PURPOSES
-  const playerObj = document.createElement('div')
+  /*const playerObj = document.createElement('div')
   playerObj.id = "Player"
   playerObj.className = 'You'
-  gameArea.appendChild(playerObj)
+  gameArea.appendChild(playerObj)*/
   //TESTING PURPOSES
 
-  const currentPlayer = new Player(playerObj)
+  let currentPlayer
+
   const buttonUpContainr = document.createElement('div')
   buttonUpContainr.id = 'btnUpContainer'
   const buttonUp = document.createElement('button')
   buttonUp.id = 'btnUp'
-  buttonUp.addEventListener('click', ()=>{
-    currentPlayer.update('up', borders)
-    updateFirestore();
+  buttonUp.addEventListener('click', () => {
+    if (window.location.pathname === '/playground') {
+      currentPlayer.update('up', borders, postsDoor)
+    }
   })
   buttonUp.textContent = '^'
   const buttons = document.createElement('div')
@@ -167,31 +170,38 @@ export const playground = () => {
   const buttonDown = document.createElement('button')
   buttonDown.id = 'btnDown'
   buttonDown.textContent = 'v'
-  buttonDown.addEventListener('click', ()=>{
-    currentPlayer.update('down', borders)
-    updateFirestore();
+  buttonDown.addEventListener('click', () => {
+    if (window.location.pathname === '/playground') {
+      currentPlayer.update('down', borders, postsDoor)
+    }
   })
   const buttonLeft = document.createElement('button')
   buttonLeft.id = 'btnLeft'
   buttonLeft.textContent = '<'
-  buttonLeft.addEventListener('click', ()=>{
-    currentPlayer.update('right', borders)
-    updateFirestore();
+  buttonLeft.addEventListener('click', () => {
+    if (window.location.pathname === '/playground') {
+      currentPlayer.update('right', borders, postsDoor)
+    }
   })
   const buttonRight = document.createElement('button')
   buttonRight.id = 'btnRight'
   buttonRight.textContent = '>'
-  buttonRight.addEventListener('click', ()=>{
-    currentPlayer.update('left', borders)
-    updateFirestore();
+  buttonRight.addEventListener('click', () => {
+    if (window.location.pathname === '/playground') {
+      currentPlayer.update('left', borders, postsDoor)
+    }
   })
 
   buttonUpContainr.appendChild(buttonUp)
   buttons.append(buttonLeft, buttonDown, buttonRight)
 
-  footer.append(innerText, buttonUpContainr,  buttons)
+  footer.append(innerText, buttonUpContainr, buttons)
 
   //DOORS PART----------------------------------------------------------------------------------------
+  const postsDoor = document.createElement('div')
+  postsDoor.id = 'postsDoor'
+
+  gameArea.append(postsDoor)
 
   //write a message part
   //const footer =  document.createElement('footer')
@@ -200,12 +210,4 @@ export const playground = () => {
   return div
 }
 
-export let playerRef
 
-const updateFirestore = (playerRef) => {
-  /*updateDoc(playerRef, {
-    top: this.playerObj.getBoundingClientRect().top,
-    left: this.playerObj.getBoundingClientRect().left
-  });
-  console.log(this.playerObj.getBoundingClientRect())*/
-}
