@@ -1,6 +1,6 @@
 import {
   auth, signOut, query, where, db, collection, getDocs, onSnapshot,
-  deleteDoc, addDoc, onAuthStateChanged, doc
+  deleteDoc, addDoc, onAuthStateChanged, doc, getDoc, setDoc
 } from "../importsFirebase.js";
 import { onNavigate } from '../main.js'
 import { InputHandler } from './Lobby/input.js'
@@ -16,33 +16,6 @@ export const playground = () => {
 
   const alert = document.createElement('p')
   alert.id = 'alert'
-
-
-  //ADDING REMOVABLE COLLECTION TO STORE MOVEMENT----------------------
-  //Se puede uno solo?
-  let playerRef
-  const pranksterRef = collection(db, 'Pranksters')
-  const qy = query(pranksterRef, where('userID', '==', auth.currentUser.uid))
-  getDocs(qy)
-    .then((qSnap) => {
-      let actualColor
-      qSnap.forEach(doc => {
-        actualColor = doc.data().color
-      });
-      addDoc(collection(db, 'PranksterMove'), {
-        name: auth.currentUser.displayName,
-        userID: auth.currentUser.uid,
-        color: actualColor,
-        top: 353.5,
-        left: 173.5  //RECORDAR QUE TIENE Q UE TENER PUTNO DESIMAL PARA QUE LO PUIEDA LEEERRRR
-      })
-        .then((data) => {
-          playerRef = doc(db, 'PranksterMove', data._key.path.segments[1])
-          console.log('data:', data._key.path.segments[1])
-          console.log('playerRef:', playerRef)
-        })
-        .catch((e) => { console.log('error creating doc:', e) })
-    })
 
   //CLOSE SESION PART-------------------------------------------------
   const logOut = document.createElement('div')
@@ -70,6 +43,23 @@ export const playground = () => {
   //we have to remove from firestore
   //database.ref('PranksterMove/' + playerRef).onDisconnect().remove()
 
+  //ADDING REMOVABLE COLLECTION TO STORE MOVEMENT----------------------
+  const playerRef = doc(db, 'PranksterMove', auth.currentUser.uid)
+  getDoc(doc(db, "Pranksters", auth.currentUser.uid))
+    .then((data) => {
+      console.log('data: ', data.data()) //getDoc si arroja la data
+      setDoc((playerRef), { //Recordar usar el nombre correcto de la coleccion
+        name: auth.currentUser.displayName,
+        userID: auth.currentUser.uid,
+        color: data.data().color,
+        top: 353.5,
+        left: 173.5
+      })
+        .then(() => console.log('removable movement doc, created'))
+        .catch((e) => console.log('error creating movement doc: ', e))
+    })
+    .catch((e) => console.log('error: ', e))
+
   //GAME PART---------------------------------------------------------
   const gameArea = document.getElementById('gameArea')
   const image = document.createElement('img')
@@ -89,51 +79,67 @@ export const playground = () => {
     borderUp, borderLeft, borderRight, borderBottom
   ]
 
-
   //INTEGRATING PLAYERS------------------------------------------------
-  const q = query(collection(db, "PranksterMove"));
+  const q = query(collection(db, 'PranksterMove'))
   const allPlayers = onSnapshot(q, (querySnapshot) => {
-    //console.log(querySnapshot)
+    //console.log('querySnapshot: ', querySnapshot)
     querySnapshot.docChanges().forEach((change) => {
-      //console.log(change)
-      const dataGeter = change.doc._document.data.value.mapValue.fields
-      if (change.type === "added") { //Si hay documentos en firestore o se añaden más
-        const newPlayer = document.createElement('div') //crearelobjeto del jugador
-        newPlayer.id = 'Player'
-        if (dataGeter.userID.stringValue === auth.currentUser.uid) {
-          newPlayer.className = "You" //Si eres tu, te pondra borde rojo
-          currentPlayer = new Player(newPlayer)
-        } else {
-          newPlayer.className = dataGeter.userID.stringValue
-        }
-        newPlayer.style.backgroundColor = dataGeter.color.stringValue
-        newPlayer.style.top = dataGeter.top.doubleValue + "px"
-        newPlayer.style.left = dataGeter.left.doubleValue + 'px'
-        const playerName = document.createElement('p')
-       // playerName.id = 'pranksterName'
-        playerName.textContent = dataGeter.name.stringValue
-        newPlayer.appendChild(playerName)
-        gameArea.appendChild(newPlayer)
-      }
-      else if (change.type === 'modified') {
-        const otherPlayers = document.getElementsByClassName(dataGeter.userID.stringValue)
-        if (otherPlayers[0]) {
-          otherPlayers[0].style.top = dataGeter.top.doubleValue + "px"
-          otherPlayers[0].style.left = dataGeter.left.doubleValue + 'px'
-          console.log('left: ', dataGeter.left.doubleValue)
-          console.log('dataGeter: ', dataGeter)
-        }
-      }
-      else if (change.type === 'removed') {
-        console.log('REMOVED SOONNN')
-        const otherPlayer = document.getElementsByClassName(dataGeter.userID.stringValue)
-        console.log(otherPlayer)
-        otherPlayer[0].remove()
-      }
-      console.log(change.type)
-    });
-  });
+      //console.log('change: ', change.type)
+      if (change.type === "added") {
+        const newPlayer = document.createElement('div')
+        newPlayer.className = 'Player'
+        
 
+        
+      }
+    })
+  })
+
+  /*
+    //INTEGRATING PLAYERS------------------------------------------------
+    const q = query(collection(db, "PranksterMove"));
+    const allPlayers = onSnapshot(q, (querySnapshot) => {
+      //console.log(querySnapshot)
+      querySnapshot.docChanges().forEach((change) => {
+        //console.log(change)
+        const dataGeter = change.doc._document.data.value.mapValue.fields
+        if (change.type === "added") { //Si hay documentos en firestore o se añaden más
+          const newPlayer = document.createElement('div') //crearelobjeto del jugador
+          newPlayer.id = 'Player'
+          if (dataGeter.userID.stringValue === auth.currentUser.uid) {
+            newPlayer.className = "You" //Si eres tu, te pondra borde rojo
+            currentPlayer = new Player(newPlayer)
+          } else {
+            newPlayer.className = dataGeter.userID.stringValue
+          }
+          newPlayer.style.backgroundColor = dataGeter.color.stringValue
+          newPlayer.style.top = dataGeter.top.doubleValue + "px"
+          newPlayer.style.left = dataGeter.left.doubleValue + 'px'
+          const playerName = document.createElement('p')
+         // playerName.id = 'pranksterName'
+          playerName.textContent = dataGeter.name.stringValue
+          newPlayer.appendChild(playerName)
+          gameArea.appendChild(newPlayer)
+        }
+        else if (change.type === 'modified') {
+          const otherPlayers = document.getElementsByClassName(dataGeter.userID.stringValue)
+          if (otherPlayers[0]) {
+            otherPlayers[0].style.top = dataGeter.top.doubleValue + "px"
+            otherPlayers[0].style.left = dataGeter.left.doubleValue + 'px'
+            console.log('left: ', dataGeter.left.doubleValue)
+            console.log('dataGeter: ', dataGeter)
+          }
+        }
+        else if (change.type === 'removed') {
+          console.log('REMOVED SOONNN')
+          const otherPlayer = document.getElementsByClassName(dataGeter.userID.stringValue)
+          console.log(otherPlayer)
+          otherPlayer[0].remove()
+        }
+        console.log(change.type)
+      });
+    });
+  */
 
   gameArea.append(image, borderUp, borderLeft, borderRight, borderBottom)
 

@@ -13,7 +13,7 @@ export const database = getDatabase(app)
 
 export {
     doc, getDocs, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField, query, where,
-    onSnapshot
+    onSnapshot, getDoc
 } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore.js'
 
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore.js'

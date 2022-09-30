@@ -1,4 +1,4 @@
-import { addDoc, onSnapshot } from "../importsFirebase.js"
+import { addDoc, onSnapshot, deleteDoc } from "../importsFirebase.js"
 
 export const Gossiper = () => {
     const div = document.createElement('div')
@@ -23,15 +23,21 @@ export const Gossiper = () => {
     logOutImg.id = 'logOutImg'
     logOut.append(logOutImg)
 
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            deleteDoc(playerRef)
-                .then((data) => { console.log('signOut:', data) })
-                .catch((e) => { console.log('error singing out: ', e) })
-        }
-    });
+    deleteDoc(playerRef)
+        .then((data) => { console.log('signOut:', data) })
+        .catch((e) => { console.log('error singing out: ', e) })
 
     //POSTS SECTION-----------------------------------------------------------------
+
+    //Crear un documento de posts
+    //fecha
+    //userID
+    //userName
+    //post
+    //likes
+    //Crear campo para que puedas escribir tu posts
+    //leer el documento para ponerlo en la interfaz
+
 
 
     //FOOTER-------------------------------------------------------------------------

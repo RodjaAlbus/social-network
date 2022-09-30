@@ -1,6 +1,7 @@
 import { onNavigate } from '../main.js'
 import {
-  auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc, deleteDoc
+  auth, updateProfile, createUserWithEmailAndPassword, db, doc, collection, addDoc, deleteDoc,
+  setDoc
 } from '../importsFirebase.js'
 
 export const Welcome = () => {
@@ -105,18 +106,18 @@ export const Welcome = () => {
       createUserWithEmailAndPassword(auth, email.value.toLowerCase(), password.value)
         .then(() => {
           // Salvar los datos del usuario (Firebase Store)
-          addDoc(collection(db, 'Pranksters'), {
+          setDoc(doc(db, 'Pranksters', auth.currentUser.uid), {
             color: theColorOfTheButton,
             signInEmail: email.value.toLowerCase(),
             userID: auth.currentUser.uid
           })
-            .then((data) => {
-              console.log(data)
-              //console.log(data._key.path.segments[1])
+            .then(() => {
+              //setDoc no arroja nada a diferencia de addDoc. Tal vez usar asincrona
+              //Como sugieren en la documentacion
               onNavigate('/message')
             })
             .catch((e) => {
-              alert(e.message)
+              alert.textContent = e.message
             })
           updateProfile(auth.currentUser, {
             displayName: pranksterName.value

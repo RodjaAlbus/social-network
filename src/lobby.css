@@ -7,7 +7,7 @@
     pointer-events: none;
 }
 
-#Player {
+.Player {
     position: fixed;
     transform: translate(-50%, -50%);
     background-color: aqua;
