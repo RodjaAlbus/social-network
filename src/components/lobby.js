@@ -47,7 +47,7 @@ export const playground = () => {
   const playerRef = doc(db, 'PranksterMove', auth.currentUser.uid)
   getDoc(doc(db, "Pranksters", auth.currentUser.uid))
     .then((data) => {
-      console.log('data: ', data.data()) //getDoc si arroja la data
+      //console.log('data: ', data.data()) //getDoc si arroja la data
       setDoc((playerRef), { //Recordar usar el nombre correcto de la coleccion
         name: auth.currentUser.displayName,
         userID: auth.currentUser.uid,
@@ -55,7 +55,56 @@ export const playground = () => {
         top: 353.5,
         left: 173.5
       })
-        .then(() => console.log('removable movement doc, created'))
+        .then(() => {
+          console.log('removable movement doc, created')
+          //INTEGRATING PLAYERS------------------------------------------------
+          const q = query(collection(db, 'PranksterMove'))
+          const allPlayers = onSnapshot(q, (querySnapshot) => {
+            //console.log('querySnapshot: ', querySnapshot)
+            querySnapshot.docChanges().forEach((change) => {
+              console.log('change: ', change.type)
+              const dataLocation = change.doc._document.key.path.segments[6] //Estaba poniendo mal el numero JA
+              
+              getDoc(doc(db, 'PranksterMove', dataLocation))
+                .then((data) => {
+                  const dataGeter = data.data()
+                  const searchUserId = dataGeter.userID
+                  console.log(searchUserId)
+                  switch (change.type) {
+                    case "added":
+                      const newPlayer = document.createElement('div') //crearelobjeto del jugador
+                      newPlayer.className = 'Player'
+                      newPlayer.style.backgroundColor = dataGeter.color
+                      newPlayer.style.top = dataGeter.top + "px"
+                      newPlayer.style.left = dataGeter.left + 'px'
+                      const playerName = document.createElement('p')
+                      playerName.textContent = dataGeter.name
+                      newPlayer.appendChild(playerName)
+                      gameArea.appendChild(newPlayer)
+                      if (dataLocation === auth.currentUser.uid) {
+                        newPlayer.id = "You" //Si eres tu, te pondra borde rojo
+                        currentPlayer = new Player(newPlayer) //Y mandara este div a que lo controles
+                      } else {
+                        newPlayer.id = dataGeter.userID
+                      }
+                      break;
+                    case "modified":
+                      const otherPlayers = document.getElementById(searchUserId)
+                      if (otherPlayers) {
+                        otherPlayers.style.top = dataGeter.top + "px"
+                        otherPlayers.style.left = dataGeter.left + 'px'
+                      }
+                      break;
+                    case "modified":
+                      const otherPlayersD = document.getElementById(searchUserId)
+                      otherPlayersD.remove()
+                      break;
+                  }
+                })
+                .catch((e) => console.log("error geting allPlayersDocs: ", e))
+            })
+          })
+        })
         .catch((e) => console.log('error creating movement doc: ', e))
     })
     .catch((e) => console.log('error: ', e))
@@ -78,68 +127,6 @@ export const playground = () => {
   const borders = [
     borderUp, borderLeft, borderRight, borderBottom
   ]
-
-  //INTEGRATING PLAYERS------------------------------------------------
-  const q = query(collection(db, 'PranksterMove'))
-  const allPlayers = onSnapshot(q, (querySnapshot) => {
-    //console.log('querySnapshot: ', querySnapshot)
-    querySnapshot.docChanges().forEach((change) => {
-      //console.log('change: ', change.type)
-      if (change.type === "added") {
-        const newPlayer = document.createElement('div')
-        newPlayer.className = 'Player'
-        
-
-        
-      }
-    })
-  })
-
-  /*
-    //INTEGRATING PLAYERS------------------------------------------------
-    const q = query(collection(db, "PranksterMove"));
-    const allPlayers = onSnapshot(q, (querySnapshot) => {
-      //console.log(querySnapshot)
-      querySnapshot.docChanges().forEach((change) => {
-        //console.log(change)
-        const dataGeter = change.doc._document.data.value.mapValue.fields
-        if (change.type === "added") { //Si hay documentos en firestore o se añaden más
-          const newPlayer = document.createElement('div') //crearelobjeto del jugador
-          newPlayer.id = 'Player'
-          if (dataGeter.userID.stringValue === auth.currentUser.uid) {
-            newPlayer.className = "You" //Si eres tu, te pondra borde rojo
-            currentPlayer = new Player(newPlayer)
-          } else {
-            newPlayer.className = dataGeter.userID.stringValue
-          }
-          newPlayer.style.backgroundColor = dataGeter.color.stringValue
-          newPlayer.style.top = dataGeter.top.doubleValue + "px"
-          newPlayer.style.left = dataGeter.left.doubleValue + 'px'
-          const playerName = document.createElement('p')
-         // playerName.id = 'pranksterName'
-          playerName.textContent = dataGeter.name.stringValue
-          newPlayer.appendChild(playerName)
-          gameArea.appendChild(newPlayer)
-        }
-        else if (change.type === 'modified') {
-          const otherPlayers = document.getElementsByClassName(dataGeter.userID.stringValue)
-          if (otherPlayers[0]) {
-            otherPlayers[0].style.top = dataGeter.top.doubleValue + "px"
-            otherPlayers[0].style.left = dataGeter.left.doubleValue + 'px'
-            console.log('left: ', dataGeter.left.doubleValue)
-            console.log('dataGeter: ', dataGeter)
-          }
-        }
-        else if (change.type === 'removed') {
-          console.log('REMOVED SOONNN')
-          const otherPlayer = document.getElementsByClassName(dataGeter.userID.stringValue)
-          console.log(otherPlayer)
-          otherPlayer[0].remove()
-        }
-        console.log(change.type)
-      });
-    });
-  */
 
   gameArea.append(image, borderUp, borderLeft, borderRight, borderBottom)
 
