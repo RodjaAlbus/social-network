@@ -64,12 +64,14 @@ export const playground = () => {
             querySnapshot.docChanges().forEach((change) => {
               console.log('change: ', change.type)
               const dataLocation = change.doc._document.key.path.segments[6] //Estaba poniendo mal el numero JA
-              
+              if(change.type === 'removed'){
+                const userIdtoDelete = change.doc._document.data.value.mapValue.fields.userID.stringValue
+                const otherPlayersD = document.getElementById(userIdtoDelete)
+                if(otherPlayersD) otherPlayersD.remove()
+              }
               getDoc(doc(db, 'PranksterMove', dataLocation))
                 .then((data) => {
                   const dataGeter = data.data()
-                  const searchUserId = dataGeter.userID
-                  console.log(searchUserId)
                   switch (change.type) {
                     case "added":
                       const newPlayer = document.createElement('div') //crearelobjeto del jugador
@@ -89,15 +91,11 @@ export const playground = () => {
                       }
                       break;
                     case "modified":
-                      const otherPlayers = document.getElementById(searchUserId)
+                      const otherPlayers = document.getElementById(dataGeter.userID)
                       if (otherPlayers) {
                         otherPlayers.style.top = dataGeter.top + "px"
                         otherPlayers.style.left = dataGeter.left + 'px'
                       }
-                      break;
-                    case "modified":
-                      const otherPlayersD = document.getElementById(searchUserId)
-                      otherPlayersD.remove()
                       break;
                   }
                 })
