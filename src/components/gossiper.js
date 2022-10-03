@@ -1,6 +1,6 @@
 import {
-    addDoc, onSnapshot, deleteDoc, db, doc, setDoc, auth, collection,
-    query, getDoc, signOut
+    addDoc, onSnapshot, deleteDoc, db, doc, auth, collection,
+    query, getDoc, signOut, updateDoc, increment
 } from "../importsFirebase.js"
 import { onNavigate } from '../main.js'
 
@@ -12,11 +12,11 @@ export const Gossiper = () => {
     const paperEffect = document.createElement('div')
     paperEffect.id = 'paperH1'
 
-
-    deleteDoc(doc(db, 'PranksterMove', auth.currentUser.uid))
-        .then((data) => { console.log('Deleting removable doc', data) })
-        .catch((e) => { console.log('error deleting removable doc: ', e) })
-
+    
+        deleteDoc(doc(db, 'PranksterMove', auth.currentUser.uid))
+            .then((data) => { console.log('Deleting removable doc', data) })
+            .catch((e) => { console.log('error deleting removable doc: ', e) })
+    
 
     //CLOSE SESION PART------------------------------------------------------------
     const logOut = document.createElement('div')
@@ -77,8 +77,6 @@ export const Gossiper = () => {
                                     spreadGossip.textContent = 'spread a gossip'
                                     counter = 1
                                     document.getElementById('postSection').remove()
-                                    //--
-                                    //--
                                 }).catch((e) => console.log('error posting: ', e))
                             })
                     }
@@ -98,6 +96,7 @@ export const Gossiper = () => {
     gossipButton.append(sGossipPaper, spreadGossip)
 
     //SHOW THE POSTS-----------------------------------------------------------------
+    let arrayAllPosts = []
     const showPostContainer = document.createElement('section')
     showPostContainer.id = 'showPostContainer'
     const q = query(collection(db, 'Gossiper'))
@@ -105,12 +104,13 @@ export const Gossiper = () => {
         showPostContainer.innerHTML = ''
         console.log(querySnapshot, "querySnapshot")
         if (q) {
-            querySnapshot.forEach((individualDoc) => {                
-                const dataGeter = individualDoc.data()
-                postCreation(dataGeter)
+            querySnapshot.forEach((individualDoc) => {
+                //arrayAllPosts.push(individualDoc.data())
+                //console.log(arrayAllPosts)
+                postCreation(individualDoc)
             })
-            
         }
+
     })
 
     //FOOTER-------------------------------------------------------------------------
@@ -126,30 +126,31 @@ export const Gossiper = () => {
     return div
 }
 
-const postCreation = (dataGeter) => {
+const postCreation = (data) => {
     const post = document.createElement('div')
     post.className = 'post'
-    post.style.backgroundColor = dataGeter.color
+    post.style.backgroundColor = data.data().color
     const poster = document.createElement('div')
-    poster.textContent = dataGeter.userName
+    poster.textContent = data.data().userName
     poster.id = 'poster'
     const postText = document.createElement('div')
     postText.className = 'postText'
-    postText.textContent = dataGeter.post
+    postText.textContent = data.data().post
     const likeContainer = document.createElement('div')
     likeContainer.className = 'likeContainer'
     const likeCounter = document.createElement('div')
-    likeCounter.textContent = dataGeter.likes
+    likeCounter.textContent = data.data().likes
     likeCounter.className = 'likeCounter'
-    const likesPost = document.createElement('button')
-    likesPost.className = 'likesPost'
-    likesPost.textContent = '<3'
-    if (dataGeter.userID === auth.currentUser.uid) {
+    if (data.data().userID === auth.currentUser.uid) {
         post.id = 'yourPost'
     } else {
+        const likesPost = document.createElement('button')
+        likesPost.className = 'likesPost'
+        likesPost.textContent = '<3'
         likesPost.addEventListener('click', () => {
-            dataGeter.likes = dataGeter.likes++
-            console.log('like')
+            updateDoc(doc(db, 'Gossiper', data._key.path.segments[6]), {
+                likes: increment(1)
+            })
         })
     }
     likeContainer.append(likesPost, likeCounter)
