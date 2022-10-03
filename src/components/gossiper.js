@@ -1,4 +1,7 @@
-import { addDoc, onSnapshot, deleteDoc, db, doc, setDoc, auth, collection } from "../importsFirebase.js"
+import {
+    addDoc, onSnapshot, deleteDoc, db, doc, setDoc, auth, collection,
+    query, getDoc, signOut
+} from "../importsFirebase.js"
 import { onNavigate } from '../main.js'
 
 export const Gossiper = () => {
@@ -9,9 +12,10 @@ export const Gossiper = () => {
     const paperEffect = document.createElement('div')
     paperEffect.id = 'paperH1'
 
-    deleteDoc(doc(db, 'PranksterMove', auth.currentUser.uid))
-        .then((data) => { console.log('Deleting removable doc', data) })
-        .catch((e) => { console.log('error deleting removable doc: ', e) })
+        deleteDoc(doc(db, 'PranksterMove', auth.currentUser.uid))
+            .then((data) => { console.log('Deleting removable doc', data) })
+            .catch((e) => { console.log('error deleting removable doc: ', e) })
+    
 
     //CLOSE SESION PART------------------------------------------------------------
     const logOut = document.createElement('div')
@@ -41,40 +45,109 @@ export const Gossiper = () => {
         switch (counter) {
             case 1:
                 const postSection = document.createElement('section')
-                postSection.className = 'postInput'
+                postSection.className = 'postContainer'
                 postSection.id = 'postSection'
                 const postInput = document.createElement('input')
                 postInput.setAttribute('type', 'text')
                 postInput.id = 'postInput'
-                postSection.append(postInput)
+                const alert = document.createElement('p')
+                alert.id = 'alert'
+                const postButton = document.createElement('button')
+                postButton.id = 'postButton'
+                postButton.className = 'buttons'
+                postButton.textContent = 'make some noise!'
+                postButton.addEventListener('click', () => {
+                    if (!postInput.value) alert.textContent = "write a gossip :p"
+                    else {
+                        addDoc(collection(db, 'Gossiper'), {
+                            date: new Date(),
+                            userID: auth.currentUser.uid,
+                            userName: auth.currentUser.displayName,
+                            post: document.getElementById('postInput').value,
+                            likes: 0
+                        }).then((data) => {
+                            const documentLocation = data._key.path.segments[1]
+                            console.log('data: ', documentLocation)
+                            spreadGossip.textContent = 'spread a gossip'
+                            counter = 1
+                            document.getElementById('postSection').remove()
+                            //--
+                            
+                            //--
+                        }).catch((e) => console.log('error posting: ', e))
+                    }
+                })
+                postSection.append(postInput, alert, postButton)
                 div.appendChild(postSection)
-                spreadGossip.textContent = 'Abbort mission'
+                spreadGossip.textContent = 'abbort mission'
                 counter = 0
                 break;
             case 0:
-                addDoc(collection(db, 'Gossiper'), {
-                    date: new Date(),
-                    userID: auth.currentUser.uid,
-                    userName: auth.currentUser.displayName,
-                    post: document.getElementById('postInput').value,
-                    likes: 0
-                }).then(() => {
-                    spreadGossip.textContent = 'spread a gossip'
-                    counter = 0
-                    document.getElementById('postSection').remove()
-                }).catch((e) => console.log('error posting: ', e))
+                spreadGossip.textContent = 'spread a gossip'
+                counter = 1
+                document.getElementById('postSection').remove()
                 break;
         }
     })
     gossipButton.append(sGossipPaper, spreadGossip)
 
-    //POST THE POSTS-----------------------------------------------------------------
+    //SHOW THE POSTS-----------------------------------------------------------------
+    const showPostContainer = document.createElement('section')
+    showPostContainer.id = 'showPostContainer'
     const q = query(collection(db, 'Gossiper'))
     const allPosts = onSnapshot(q, (querySnapshot) => {
-      //console.log('querySnapshot: ', querySnapshot)
-      querySnapshot.docChanges().forEach((change) => {
+        console.log('querySnapshot: ', querySnapshot)
+        querySnapshot.docChanges().forEach((change) => {
+            const dataLocation = change.doc._document.key.path.segments[6]
+            console.log('dataLocation: ', dataLocation)
+            getDoc(doc(db, 'Gossiper', dataLocation))
+                .then((data) => {
+                    const dataGeter = data.data()
+                    switch (change.type) {
+                        case 'added':
+                            const post = document.createElement('div')
+                            post.className = 'post'
+                            getDoc(doc(db, 'Pranksters', dataGeter.userID))
+                                .then((data) => {
+                                    post.style.backgroundColor = data.data().color
+                                })
+                            const poster = document.createElement('div')
+                            poster.textContent = dataGeter.userName
+                            poster.id = 'poster'
+                            const postText = document.createElement('div')
+                            postText.className = 'postText'
+                            postText.textContent = dataGeter.post
+                            const likeContainer = document.createElement('div')
+                            likeContainer.className = 'likeContainer'
+                            const likeCounter = document.createElement('div')
+                            likeCounter.textContent = dataGeter.likes
+                            likeCounter.className = 'likeCounter'
+                            const likesPost = document.createElement('button')
+                            likesPost.className = 'likesPost'
+                            likesPost.textContent = '<3'
+                            if (dataGeter.userID === auth.currentUser.uid) {
+                                post.id = 'yourPost'
+                            } else {
+                                likesPost.addEventListener('click', () => {
+                                    dataGeter.likes = dataGeter.likes++
+                                    console.log('like')
+                                })
+                            }
+                            likeContainer.append(likesPost, likeCounter)
+                            post.append(poster, postText, likeContainer)
+                            showPostContainer.appendChild(post)
+                            break;
+                        case 'modified':
+                            const likeCOunter = document.getElementsByClassName('likeCounter')
+                            likeCOunter[0].textContent = dataGeter.likes
+                            break;
+                        case 'removed':
 
-      })
+                            break;
+                    }
+                })
+
+        })
     })
 
 
@@ -87,7 +160,7 @@ export const Gossiper = () => {
     const footerPaperEffact = document.createElement('div')
     footerPaperEffact.id = 'footerPaper'
 
-    div.append(title, paperEffect, logOut, gossipButton, btnReturnLobby, footerPaperEffact)
+    div.append(title, paperEffect, logOut, gossipButton, showPostContainer, btnReturnLobby, footerPaperEffact)
 
     return div
 }

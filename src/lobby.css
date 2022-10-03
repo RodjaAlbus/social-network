@@ -97,3 +97,26 @@
     width: 12%;
 }
 
+#btnUpContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#movementButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+#btnUp,
+#btnDown,
+#btnLeft,
+#btnRight {
+    background-color: #b7ff81;
+    height: 150%;
+    width: 20%;
+    border-radius: 10%;
+}
