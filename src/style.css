@@ -315,10 +315,6 @@ p {
     clip-path: polygon(0% 1%, 16% 1%, 32% 1%, 48% 5%, 62% 0%, 83% 3%, 99% 0%, 98% 9%, 100% 35%, 98% 79%, 100% 100%, 59% 93%, 40% 100%, 9% 97%, 0% 100%, 0% 73%, 0% 54%, 4% 43%);
 }
 
-#yourPost{
-    border: 10px solid rgba(235, 47, 87, 1);
-}
-
 #poster{
     margin: 2%;
     color: black;
@@ -346,4 +342,10 @@ p {
     border: 2px solid white;
     color: white;
     background-color: rgba(235, 47, 87, 1);
+}
+
+.posterContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

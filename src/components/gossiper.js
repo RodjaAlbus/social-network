@@ -107,7 +107,7 @@ export const Gossiper = () => {
             querySnapshot.forEach((individualDoc) => {
                 //arrayAllPosts.push(individualDoc.data())
                 //console.log(arrayAllPosts)
-                postCreation(individualDoc)
+                postCreation(individualDoc, showPostContainer)
             })
         }
 
@@ -126,13 +126,15 @@ export const Gossiper = () => {
     return div
 }
 
-const postCreation = (data) => {
+const postCreation = (data, showPostContainer) => {
     const post = document.createElement('div')
     post.className = 'post'
     post.style.backgroundColor = data.data().color
+    const posterContainer = document.createElement('div')
     const poster = document.createElement('div')
     poster.textContent = data.data().userName
     poster.id = 'poster'
+    posterContainer.appendChild(poster)
     const postText = document.createElement('div')
     postText.className = 'postText'
     postText.textContent = data.data().post
@@ -142,7 +144,15 @@ const postCreation = (data) => {
     likeCounter.textContent = data.data().likes
     likeCounter.className = 'likeCounter'
     if (data.data().userID === auth.currentUser.uid) {
-        post.id = 'yourPost'
+        const deletePost = document.createElement('button')
+        deletePost.className = 'buttons'
+        deletePost.textContent = 'X'
+        posterContainer.className = 'posterContainer'
+        deletePost.addEventListener('click', ()=>{
+            deleteDoc(doc(db, "Gossiper", data._key.path.segments[6]))
+            .then(()=> console.log('deleted'))
+        })
+        posterContainer.appendChild(deletePost)
     } else {
         const likesPost = document.createElement('button')
         likesPost.className = 'likesPost'
@@ -152,8 +162,9 @@ const postCreation = (data) => {
                 likes: increment(1)
             })
         })
+        likeContainer.appendChild(likesPost)
     }
-    likeContainer.append(likesPost, likeCounter)
-    post.append(poster, postText, likeContainer)
+    likeContainer.appendChild(likeCounter)
+    post.append(posterContainer, postText, likeContainer)
     showPostContainer.appendChild(post)
 }
